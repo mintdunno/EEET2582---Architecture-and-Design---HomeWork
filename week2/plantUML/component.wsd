@@ -1,0 +1,39 @@
+@startuml C4_Component
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Component Diagram - Order Service\n
+
+Container_Boundary(order_service, "Order Service") {
+    Component(order_controller, "Order Controller", "Spring MVC REST Controller", "Handles HTTP requests for order operations")
+    Component(order_service_comp, "Order Service", "Spring Service", "Implements order business logic")
+    Component(order_repo, "Order Repository", "Spring Data JPA", "Handles order data access")
+    Component(payment_comp, "Payment Component", "Spring Component", "Handles payment processing")
+    Component(notification_comp, "Notification Component", "Spring Component", "Manages order notifications")
+    Component(validation_comp, "Validation Component", "Spring Component", "Validates order data")
+    
+    ' Domain Models
+    Component(order_model, "Order Domain Model", "JPA Entity", "Order business objects")
+    Component(payment_model, "Payment Domain Model", "JPA Entity", "Payment business objects")
+}
+
+' External Dependencies
+ContainerDb(order_db, "Order Database", "PostgreSQL", "Stores order information")
+System_Ext(payment_gateway, "Payment Gateway", "External payment processing")
+System_Ext(notification_service, "Notification Service", "Email and SMS gateway")
+
+' Relationships
+Rel(order_controller, order_service_comp, "Uses")
+Rel(order_service_comp, order_repo, "Uses")
+Rel(order_service_comp, payment_comp, "Uses")
+Rel(order_service_comp, notification_comp, "Uses")
+Rel(order_service_comp, validation_comp, "Uses")
+
+Rel(order_repo, order_db, "Reads/Writes")
+Rel(payment_comp, payment_gateway, "Processes payments")
+Rel(notification_comp, notification_service, "Sends notifications")
+
+Rel_D(order_service_comp, order_model, "Uses")
+Rel_D(payment_comp, payment_model, "Uses")
+
+LAYOUT_WITH_LEGEND()
+@enduml

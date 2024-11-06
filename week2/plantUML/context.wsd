@@ -1,0 +1,42 @@
+@startuml C4_Context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+' Custom Styling
+!define FONTNAME "Arial"
+skinparam defaultTextAlignment center
+skinparam wrapWidth 200
+skinparam maxMessageSize 200
+
+title System Context Diagram - Mr. Mushroom E-commerce System\n
+
+Person(buyer, "Buyer", "Individual or organization buying rice products", $sprite="person2")
+Person(support, "Customer Support", "Handles customer inquiries and complaints", $sprite="person2")
+Person(shopkeeper, "Shopkeeper", "Prepares and processes orders", $sprite="person2")
+Person(deliverer, "Deliverer", "Handles order deliveries", $sprite="person2")
+Person(manager, "Manager", "Manages inventory and business operations", $sprite="person2")
+Person(admin, "Admin", "Technical support and system administration", $sprite="person2")
+
+System(ecommerce, "Mr. Mushroom E-commerce", "Online rice selling platform with inventory management")
+
+System_Ext(napas, "NAPAS", "Domestic payment processing")
+System_Ext(vnpay, "VNPAY", "QR code payment processing")
+System_Ext(stripe, "Stripe", "International card payment processing")
+System_Ext(facebook, "Facebook", "Social authentication")
+System_Ext(google, "Google", "Social authentication")
+
+Rel(buyer, ecommerce, "Browses products, places orders")
+Rel(support, ecommerce, "Manages customer support tickets")
+Rel(shopkeeper, ecommerce, "Processes and prepares orders")
+Rel(deliverer, ecommerce, "Manages deliveries")
+Rel(manager, ecommerce, "Manages inventory and operations")
+Rel(admin, ecommerce, "Administers system")
+
+Rel_R(ecommerce, napas, "Processes domestic payments")
+Rel_R(ecommerce, vnpay, "Processes QR payments")
+Rel_R(ecommerce, stripe, "Processes international payments")
+Rel_L(ecommerce, facebook, "Authenticates users")
+Rel_L(ecommerce, google, "Authenticates users")
+
+LAYOUT_WITH_LEGEND()
+
+@enduml

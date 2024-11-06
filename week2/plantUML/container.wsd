@@ -1,0 +1,52 @@
+@startuml C4_Container
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Container Diagram - Mr. Mushroom E-commerce System\n
+
+' Custom Styling
+skinparam BackgroundColor transparent
+skinparam componentStyle uml2
+
+Person(buyer, "Buyer", "Rice product customer")
+Person(staff, "Staff", "Support, Shopkeeper, Deliverer")
+Person(admin, "Admin", "System administrator")
+
+System_Boundary(ecommerce, "Mr. Mushroom E-commerce System") {
+    Container(web_app, "Retail Web Application", "React, TypeScript", "Customer-facing web interface for shopping")
+    Container(staff_app, "Business Operations App", "React, TypeScript", "Staff portal for order management")
+    Container(admin_app, "Admin Portal", "React, TypeScript", "System administration interface")
+    
+    Container(api_gateway, "API Gateway", "Spring Cloud Gateway", "Routes and authenticates API requests")
+    
+    Container(order_service, "Order Service", "Spring Boot", "Handles order processing and management")
+    Container(product_service, "Product Service", "Spring Boot", "Manages product catalog and inventory")
+    Container(user_service, "User Service", "Spring Boot", "Manages user accounts and authentication")
+    Container(delivery_service, "Delivery Service", "Spring Boot", "Manages delivery operations")
+    Container(payment_service, "Payment Service", "Spring Boot", "Handles payment processing")
+    
+    ContainerDb(order_db, "Order Database", "PostgreSQL", "Stores order information with regional sharding")
+    ContainerDb(product_db, "Product Database", "PostgreSQL", "Stores product and inventory data")
+    ContainerDb(user_db, "User Database", "PostgreSQL", "Stores user account information")
+}
+
+' Relationships
+Rel(buyer, web_app, "Uses", "HTTPS")
+Rel(staff, staff_app, "Uses", "HTTPS")
+Rel(admin, admin_app, "Uses", "HTTPS")
+
+Rel(web_app, api_gateway, "Makes API calls to", "JSON/HTTPS")
+Rel(staff_app, api_gateway, "Makes API calls to", "JSON/HTTPS")
+Rel(admin_app, api_gateway, "Makes API calls to", "JSON/HTTPS")
+
+Rel(api_gateway, order_service, "Routes to", "JSON/HTTPS")
+Rel(api_gateway, product_service, "Routes to", "JSON/HTTPS")
+Rel(api_gateway, user_service, "Routes to", "JSON/HTTPS")
+Rel(api_gateway, delivery_service, "Routes to", "JSON/HTTPS")
+Rel(api_gateway, payment_service, "Routes to", "JSON/HTTPS")
+
+Rel(order_service, order_db, "Reads/Writes")
+Rel(product_service, product_db, "Reads/Writes")
+Rel(user_service, user_db, "Reads/Writes")
+
+LAYOUT_WITH_LEGEND()
+@enduml

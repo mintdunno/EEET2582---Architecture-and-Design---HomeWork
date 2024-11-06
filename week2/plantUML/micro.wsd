@@ -1,0 +1,57 @@
+@startuml Microservices
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Microservices Architecture - Mr. Mushroom E-commerce
+
+' Frontend Applications
+Container(web_client, "Web Client", "React", "Customer web interface")
+Container(admin_client, "Admin Client", "React", "Admin dashboard")
+Container(mobile_client, "Mobile Client", "React Native", "Mobile app")
+
+' API Gateway
+Container(api_gateway, "API Gateway", "Spring Cloud Gateway", "Routes and authenticates requests")
+
+' Microservices
+Container(auth_service, "Auth Service", "Spring Boot", "Handles authentication")
+Container(product_service, "Product Service", "Spring Boot", "Manages products")
+Container(order_service, "Order Service", "Spring Boot", "Processes orders")
+Container(payment_service, "Payment Service", "Spring Boot", "Handles payments")
+Container(delivery_service, "Delivery Service", "Spring Boot", "Manages deliveries")
+Container(inventory_service, "Inventory Service", "Spring Boot", "Tracks inventory")
+
+' Databases
+ContainerDb(auth_db, "Auth DB", "PostgreSQL", "User data")
+ContainerDb(product_db, "Product DB", "PostgreSQL", "Product data")
+ContainerDb(order_db, "Order DB", "PostgreSQL", "Order data")
+ContainerDb(payment_db, "Payment DB", "PostgreSQL", "Payment data")
+ContainerDb(delivery_db, "Delivery DB", "PostgreSQL", "Delivery data")
+ContainerDb(inventory_db, "Inventory DB", "PostgreSQL", "Inventory data")
+
+' Message Broker
+Container(message_broker, "Message Broker", "RabbitMQ", "Event bus")
+
+' Relationships
+Rel(web_client, api_gateway, "Uses", "HTTPS")
+Rel(admin_client, api_gateway, "Uses", "HTTPS")
+Rel(mobile_client, api_gateway, "Uses", "HTTPS")
+
+Rel(api_gateway, auth_service, "Routes")
+Rel(api_gateway, product_service, "Routes")
+Rel(api_gateway, order_service, "Routes")
+Rel(api_gateway, payment_service, "Routes")
+Rel(api_gateway, delivery_service, "Routes")
+Rel(api_gateway, inventory_service, "Routes")
+
+Rel(auth_service, auth_db, "Uses")
+Rel(product_service, product_db, "Uses")
+Rel(order_service, order_db, "Uses")
+Rel(payment_service, payment_db, "Uses")
+Rel(delivery_service, delivery_db, "Uses")
+Rel(inventory_service, inventory_db, "Uses")
+
+Rel(order_service, message_broker, "Publishes events")
+Rel(inventory_service, message_broker, "Subscribes to events")
+Rel(delivery_service, message_broker, "Subscribes to events")
+
+LAYOUT_WITH_LEGEND()
+@enduml

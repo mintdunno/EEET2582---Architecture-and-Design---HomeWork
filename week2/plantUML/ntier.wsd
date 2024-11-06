@@ -1,0 +1,54 @@
+@startuml N-Tier
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title N-Tier Architecture - Mr. Mushroom E-commerce
+
+' Presentation Tier
+Container(web_ui, "Web Interface", "React", "Customer web interface")
+Container(admin_ui, "Admin Interface", "React", "Admin dashboard")
+
+' Application Tier
+Container(app_server, "Application Server", "Spring Boot", "Business logic layer") {
+    Component(auth_module, "Auth Module", "Spring Security", "Authentication")
+    Component(product_module, "Product Module", "Spring MVC", "Product management")
+    Component(order_module, "Order Module", "Spring MVC", "Order processing")
+    Component(payment_module, "Payment Module", "Spring MVC", "Payment handling")
+}
+
+' Service Tier
+Container(service_layer, "Service Layer", "Spring Services", "Business services") {
+    Component(auth_service, "Auth Service", "Service", "Auth logic")
+    Component(product_service, "Product Service", "Service", "Product logic")
+    Component(order_service, "Order Service", "Service", "Order logic")
+    Component(payment_service, "Payment Service", "Service", "Payment logic")
+}
+
+' Data Access Tier
+Container(data_layer, "Data Access Layer", "Spring Data JPA", "Data access") {
+    Component(auth_dao, "Auth DAO", "Repository", "Auth data access")
+    Component(product_dao, "Product DAO", "Repository", "Product data access")
+    Component(order_dao, "Order DAO", "Repository", "Order data access")
+    Component(payment_dao, "Payment DAO", "Repository", "Payment data access")
+}
+
+' Data Tier
+ContainerDb(database, "Database", "PostgreSQL", "Central database")
+
+' Relationships
+Rel(web_ui, app_server, "Uses", "HTTPS")
+Rel(admin_ui, app_server, "Uses", "HTTPS")
+
+Rel(auth_module, auth_service, "Uses")
+Rel(product_module, product_service, "Uses")
+Rel(order_module, order_service, "Uses")
+Rel(payment_module, payment_service, "Uses")
+
+Rel(auth_service, auth_dao, "Uses")
+Rel(product_service, product_dao, "Uses")
+Rel(order_service, order_dao, "Uses")
+Rel(payment_service, payment_dao, "Uses")
+
+Rel(data_layer, database, "Uses", "JDBC")
+
+LAYOUT_WITH_LEGEND()
+@enduml
