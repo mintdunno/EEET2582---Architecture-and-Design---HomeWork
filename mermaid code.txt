@@ -1,0 +1,106 @@
+erDiagram
+    User {
+        UUID user_id PK
+        String name
+        String email
+        String password
+        String role
+    }
+    Donor {
+        UUID donor_id PK
+        UUID user_id FK
+        String first_name
+        String last_name
+        String email
+        String address
+    }
+    Charity {
+        UUID charity_id PK
+        UUID user_id FK
+        String name
+        String email
+        String address
+        Enum type
+        String tax_code
+    }
+    Admin {
+        UUID admin_id PK
+        UUID user_id FK
+        String email
+    }
+    Volunteer {
+        UUID volunteer_id PK
+        UUID user_id FK
+        String first_name
+        String last_name
+        String email
+    }
+    CardInfo {
+        UUID card_id PK
+        UUID user_id FK
+        String card_number
+        String expiry_date
+        String cardholder_name
+        String cvv
+    }
+    Project {
+        UUID project_id PK
+        UUID category_id FK
+        UUID charity_id FK
+        String title
+        Float target_amount
+        Float current_amount
+        String description
+        Enum status
+        Date start_date
+        Date end_date
+        String country
+        String continent
+    }
+    Donation {
+        UUID donation_id PK
+        UUID donor_id FK
+        UUID project_id FK
+        Float amount
+        Date date
+        String message
+        Enum recurring
+    }
+    Category {
+        UUID category_id PK
+        Enum name
+        String description
+    }
+    Subscription {
+        UUID subscription_id PK
+        UUID user_id FK
+        UUID category_id FK
+        String region
+    }
+    Video {
+        UUID video_id PK
+        UUID project_id FK
+        String url
+        String format
+    }
+    Image {
+        UUID image_id PK
+        UUID project_id FK
+        String url
+        String format
+    }
+
+    User ||--o{ Donor : specializes
+    User ||--o{ Charity : specializes
+    User ||--o{ Admin : specializes
+    User ||--o{ Volunteer : specializes
+    Donor ||--o{ Donation : makes
+    Charity ||--o{ Project : creates
+    Project ||--o{ Donation : receives
+    Project ||--o{ Video : has
+    Project ||--o{ Image : has
+    Project }o--|| Category : has
+    Subscription }o--|| Category : subscribes_to
+    User ||--o{ Subscription : subscribes
+    Donor ||--o{ CardInfo : has
+    Charity ||--o{ CardInfo : has
